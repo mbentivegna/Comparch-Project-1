@@ -1,18 +1,20 @@
+/*Project 1*/
+/*Michael Bentivegna, Serene Joe, Joya Debi, Simon Yoon*/
 .data 
 
 .balign 4 /*String that will be a label for us to ask for Strings */
 input_msg: .asciz "Type a string:\n"
 
 /*Storage for string 1 */
-.balign 16
+.balign 32
 string_read1: .word 0
 
 /*Storage for string 2 */
-.balign 16
+.balign 32
 string_read2: .word 0 
 
 /*Concatenated String Print */
-.balign 32
+.balign 64
 printf_msg: .asciz "The Concatenated String is: %s \n"
 
 .balign 4
@@ -24,7 +26,7 @@ error_msg: .asciz "The string is too long\n"
 
 /*Concatenated String */
 .balign 4
-newstring: .skip 32
+new_string: .skip 32
 
 /*Where we store the link register*/
 .balign 4
@@ -43,7 +45,7 @@ bl printf
 
 /*Reading first string*/
 ldr r0, address_of_string_read1
-mov r1, #32 
+mov r1, #16 
 ldr r2, address_of_stdin
 ldr r2, [r2]
 bl fgets
@@ -53,13 +55,15 @@ ldr r1, address_of_string_read1
 mov r5, #0
 ldr r6, address_of_newline
 ldr r6, [r6]
-ldr r7, address_of_newstring
+ldr r7, address_of_new_string
 
 /*Loops through inputted string until null character is reached*/
 loop1:
 ldrb r3, [r1, r5] 
 cmp r3, r6
 beq compare1
+cmp r3, #0
+beq error7
 strb r3, [r7, r5]
 add r5, r5, #1
 b loop1
@@ -75,7 +79,7 @@ bl printf
 
 /*Reading second string*/
 ldr r0, address_of_string_read2
-mov r1, #32
+mov r1, #16
 ldr r2, address_of_stdin
 ldr r2, [r2]
 bl fgets
@@ -89,6 +93,8 @@ loop2:
 ldrb r3, [r1, r4]
 cmp r3, r6
 beq compare2
+cmp r3, #0
+beq error8
 strb r3, [r7,r5]
 add r5, r5, #1
 add r4, r4, #1
@@ -101,7 +107,7 @@ bge error8
 
 /*Printing concatenated String*/
 ldr r0, address_of_printf_msg
-ldr r1, address_of_newstring
+ldr r1, address_of_new_string
 bl printf
 
 mov r0, r5
@@ -136,7 +142,7 @@ address_of_return: .word return
 address_of_error_msg: .word error_msg
 address_of_stdin: .word stdin
 address_of_newline: .word newline
-address_of_newstring: .word newstring
+address_of_new_string: .word new_string
 
 /*External functions*/
 .global printf
