@@ -17,6 +17,7 @@ string_read2: .word 0
 .balign 64
 printf_msg: .asciz "The Concatenated String is: %s \n"
 
+/*Holds newline character*/
 .balign 4
 newline: .asciz "\n"
 
@@ -57,7 +58,8 @@ ldr r6, address_of_newline
 ldr r6, [r6]
 ldr r7, address_of_new_string
 
-/*Loops through inputted string until null character is reached*/
+/*Loops through inputted string until newline character is reached*/
+/*If null character is reached it means it exceeded the read alottment*/
 loop1:
 ldrb r3, [r1, r5] 
 cmp r3, r6
@@ -110,18 +112,20 @@ ldr r0, address_of_printf_msg
 ldr r1, address_of_new_string
 bl printf
 
+/*Returns total number of characters */
 mov r0, r5
+
 /*Send to end function */
 b end
 
-
-/*Print Error Message */
+/*Print error message with a 7 return code*/
 error7:
 ldr r0, address_of_error_msg
 bl printf
 mov r0, #7
 b end
 
+/*Print error message with an 8 return code*/
 error8:
 ldr r0, address_of_error_msg
 bl printf
